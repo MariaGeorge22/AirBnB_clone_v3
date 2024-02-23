@@ -7,24 +7,25 @@ from models import storage
 from models.user import User
 
 
-@app_views.route('/users',
-                 methods=['POST'], strict_slashes=False)
-def post_user():
-    """Creates an User"""
-    try:
-        data = request.get_json()
-    except:
-        return {'error': 'Not a JSON'}, 400
-    email = data.get('email')
-    if not email:
-        return {'error': 'Missing email'}, 400
-    password = data.get('password')
-    if not password:
-        return {'error': 'Missing password'}, 400
-    new_user = User(**data)
-    storage.new(new_user)
-    storage.save()
-    return new_user.to_dict(), 201
+@app_views.route('/users', methods=['POST'], strict_slashes=False)
+def POST_User():
+    """ Creates new `User` instance in storage
+
+    Return:
+        Empty dictionary and response status 200, or 404 response
+    on error
+    """
+    req_dict = request.get_json()
+    if not req_dict:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    elif 'email' not in req_dict:
+        return (jsonify({'error': 'Missing email'}), 400)
+    elif 'password' not in req_dict:
+        return (jsonify({'error': 'Missing password'}), 400)
+    new_User = User(**req_dict)
+    new_User.save()
+
+    return (jsonify(new_User.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>',
@@ -46,19 +47,14 @@ def put_user(user_id):
     return new_user.to_dict(), 200
 
 
-@app_views.route("/users", methods=['GET'],
-                 strict_slashes=False)
-def GET_all_User():
-    """ Returns JSON list of all `User` instances in storage
-
-    Return:
-        JSON list of all `User` instances
-    """
-    user_list = []
-    for user in storage.all(User).values():
-        user_list.append(user.to_dict())
-
-    return jsonify(user_list)
+@app_views.route('/users',
+                 methods=['GET'], strict_slashes=False)
+def get_users():
+    """Retrieves the list of all City objects of a State"""
+    return jsonify(list(
+        map(lambda x: x.to_dict(),
+            storage.all(User).values())
+    ))
 
 
 @app_views.route('/users/<user_id>',
