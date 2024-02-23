@@ -14,7 +14,7 @@ def post_user():
     try:
         data = request.get_json()
     except:
-        return {'error': 'Not a JSON'}, 400
+        return (jsonify({'error': 'Not a JSON'}), 400)
     if 'email' not in data:
         return (jsonify({'error': 'Missing email'}), 400)
     elif 'password' not in data:
