@@ -25,6 +25,8 @@ class DBStorage:
     __engine = None
     __session = None
 
+    # TODO: Add Clear DB method
+
     def __init__(self):
         """Instantiate a DBStorage object"""
         HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
