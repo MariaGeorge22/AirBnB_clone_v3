@@ -11,15 +11,14 @@ from models.user import User
                  methods=['POST'], strict_slashes=False)
 def post_user():
     """Creates an User"""
-    try:
-        data = request.get_json()
-    except:
+    req_dict = request.get_json()
+    if not req_dict:
         return (jsonify({'error': 'Not a JSON'}), 400)
-    if 'email' not in data:
+    if 'email' not in req_dict:
         return (jsonify({'error': 'Missing email'}), 400)
-    elif 'password' not in data:
+    elif 'password' not in req_dict:
         return (jsonify({'error': 'Missing password'}), 400)
-    new_user = User(**data)
+    new_user = User(**req_dict)
     storage.new(new_user)
     storage.save()
     return (jsonify(new_user.to_dict()), 201)
