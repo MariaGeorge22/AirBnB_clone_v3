@@ -96,19 +96,35 @@ class TestDBStorage(unittest.TestCase):
         """Tests if get runs properly"""
         instance = DBStorage()
         instance.reload()
-        state_from_all = list(instance.all(State).values())[0]
-        first_state_id = state_from_all.id
-        self.assertEqual(instance.get(State, first_state_id),
-                         state_from_all)
+        state = State(
+            name="California"
+        )
+        instance.new(state)
+        instance.save()
+        state_id = state.id
+        self.assertEqual(instance.get(State, state_id), state)
+        instance.delete(state)
+        instance.save()
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """Tests if count runs properly"""
         instance = DBStorage()
         instance.reload()
-        count_from_all = len(list(instance.all().values()))
-        self.assertEqual(instance.count(), count_from_all,
+        state = State(name="New York")
+        instance.new(state)
+        city = City(
+            state_id=state.id,
+            name="Cairo"
+        )
+        instance.new(city)
+        instance.save()
+        self.assertEqual(instance.count(), 2,
                          "All Count is incorrect")
-        count_from_all = len(list(instance.all(State).values()))
-        self.assertEqual(instance.count(State), count_from_all,
+        self.assertEqual(instance.count(State), 1,
                          "State count is incorrect")
+        self.assertEqual(instance.count(City), 1,
+                         "City count is incorrect")
+        instance.delete(state)
+        instance.delete(city)
+        instance.save()
