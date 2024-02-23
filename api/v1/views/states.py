@@ -43,7 +43,6 @@ def put_state(state_id):
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(new_state, key, value)
-    storage.new(new_state)
     storage.save()
     return new_state.to_dict(), 201
 
