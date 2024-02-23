@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ holds class User"""
+import os
 import models
 from models.base_model import BaseModel, Base
 from os import getenv
@@ -14,7 +15,7 @@ class User(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)
-        password = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False, )
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         places = relationship("Place", backref="user")
@@ -25,10 +26,11 @@ class User(BaseModel, Base):
         first_name = ""
         last_name = ""
 
-    @password.setter
-    def password(self, pwd):
-        """hashes the password"""
-        self.password = md5(pwd)
+    if os.getenv("HBNB_TYPE_STORAGE") != "db":
+        @password.setter
+        def password(self, pwd):
+            """hashes the password"""
+            self.password = md5(pwd)
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

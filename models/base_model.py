@@ -4,6 +4,7 @@ Contains class BaseModel
 """
 
 from datetime import datetime
+from hashlib import md5
 import os
 import models
 from os import getenv
@@ -11,6 +12,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
+
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -56,6 +58,10 @@ class BaseModel:
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.utcnow()
+        if os.getenv("HBNB_TYPE_STORAGE") == "db":
+            from models.user import User
+            if type(self) is User:
+                self.password = md5(self.password)
         models.storage.new(self)
         models.storage.save()
 
