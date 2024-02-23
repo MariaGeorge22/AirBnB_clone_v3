@@ -24,7 +24,7 @@ def post_state():
     name = data.get('name')
     if not name:
         return {'error': 'Missing Name'}, 400
-    new_state = State(**data)
+    new_state = State(name=name)
     storage.new(new_state)
     storage.save()
     return new_state.to_dict(), 201
@@ -44,7 +44,7 @@ def put_state(state_id):
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(new_state, key, value)
     storage.save()
-    return new_state.to_dict(), 201
+    return new_state.to_dict(), 200
 
 
 @app_views.route('/states/<state_id>',  methods=['GET'], strict_slashes=False)
