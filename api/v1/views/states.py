@@ -20,10 +20,10 @@ def post_state():
     try:
         data = request.get_json()
     except:
-        raise abort(400, 'Not a JSON')
+        abort(400, 'Not a JSON')
     name = data.get('name')
     if not name:
-        raise abort(400, 'Missing name')
+        abort(400, 'Missing name')
     new_state = State(name=name)
     storage.new(new_state)
     storage.save()
@@ -35,11 +35,11 @@ def put_state(state_id):
     """Retrieves the list of all State objects"""
     new_state = storage.get(State, state_id)
     if not new_state:
-        raise abort(404)
+        abort(404)
     try:
         data = request.get_json()
     except:
-        raise abort(400, 'Not a JSON')
+        abort(400, 'Not a JSON')
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(new_state, key, value)
@@ -51,7 +51,7 @@ def put_state(state_id):
 def get_state(state_id):
     """Retrieves a State object"""
     if not storage.get(State, state_id):
-        raise abort(404)
+        abort(404)
     return storage.get(State, state_id).to_dict()
 
 
@@ -60,7 +60,7 @@ def get_state(state_id):
 def delete_state(state_id):
     """Retrieves a State object"""
     if not storage.get(State, state_id):
-        raise abort(404)
+        abort(404)
     storage.delete(storage.get(State, state_id))
     storage.save()
     return {}, 200
