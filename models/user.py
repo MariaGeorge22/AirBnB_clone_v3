@@ -30,7 +30,7 @@ class User(BaseModel, Base):
         @password.setter
         def password(self, pwd):
             """hashes the password"""
-            self.password = md5(pwd)
+            self.password = md5(pwd.encode()).hexdigest()
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

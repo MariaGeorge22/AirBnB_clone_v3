@@ -61,7 +61,7 @@ class BaseModel:
         if os.getenv("HBNB_TYPE_STORAGE") == "db":
             from models.user import User
             if type(self) is User:
-                self.password = md5(self.password)
+                self.password = md5(self.password.encode()).hexdigest()
         models.storage.new(self)
         models.storage.save()
 
