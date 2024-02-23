@@ -12,3 +12,4 @@ app_views = Blueprint(
 from api.v1.views.index import *  # nopep8
 from api.v1.views.states import *  # nopep8
 from api.v1.views.cities import *  # nopep8
+from api.v1.views.amenities import *  # nopep8
