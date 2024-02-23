@@ -17,9 +17,8 @@ def get_all():
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_state():
     """Retrieves the list of all State objects"""
-    try:
-        data = request.get_json()
-    except:
+    data = request.get_json()
+    if not data:
         return {'error': 'Not a JSON'}, 400
     name = data.get('name')
     if not name:
@@ -36,9 +35,8 @@ def put_state(state_id):
     new_state = storage.get(State, state_id)
     if not new_state:
         abort(404)
-    try:
-        data = request.get_json()
-    except:
+    data = request.get_json()
+    if not data:
         return {'error': 'Not a JSON'}, 400
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:

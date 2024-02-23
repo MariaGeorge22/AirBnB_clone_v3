@@ -31,9 +31,8 @@ def put_user(user_id):
     new_user = storage.get(User, user_id)
     if not new_user:
         abort(404)
-    try:
-        data = request.get_json()
-    except:
+    data = request.get_json()
+    if not data:
         return {'error': 'Not a JSON'}, 400
     for key, value in data.items():
         if key not in ['id', 'created_at',

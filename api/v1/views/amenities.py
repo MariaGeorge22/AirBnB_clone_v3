@@ -11,9 +11,8 @@ from models.amenity import Amenity
                  methods=['POST'], strict_slashes=False)
 def post_amenity():
     """Creates an Amenity"""
-    try:
-        data = request.get_json()
-    except:
+    data = request.get_json()
+    if not data:
         return {'error': 'Not a JSON'}, 400
     name = data.get('name')
     if not name:
@@ -31,9 +30,8 @@ def put_amenity(amenity_id):
     new_amenity = storage.get(Amenity, amenity_id)
     if not new_amenity:
         abort(404)
-    try:
-        data = request.get_json()
-    except:
+    data = request.get_json()
+    if not data:
         return {'error': 'Not a JSON'}, 400
     for key, value in data.items():
         if key not in ['id', 'created_at',
