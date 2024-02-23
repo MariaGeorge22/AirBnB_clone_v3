@@ -20,10 +20,10 @@ def post_state():
     try:
         data = request.get_json()
     except:
-        return 'Not a JSON', 400
+        return {'error': 'Not a JSON'}, 400
     name = data.get('name')
     if not name:
-        return 'Missing Name', 400
+        return {'error': 'Missing Name'}, 400
     new_state = State(name=name)
     storage.new(new_state)
     storage.save()
@@ -39,7 +39,7 @@ def put_state(state_id):
     try:
         data = request.get_json()
     except:
-        return 'Not a JSON', 400
+        return {'error': 'Not a JSON'}, 400
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(new_state, key, value)
