@@ -23,6 +23,7 @@ def post_place_amenity(place_id, amenity_id):
     if new_amenity in new_place.amenities:
         return new_amenity.to_dict(), 200
     if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+        new_place.amenity_ids = list(map(lambda x: x.id, new_place.amenities))
         new_place.amenity_ids.append(new_amenity.id)
         new_place.save()
     else:
