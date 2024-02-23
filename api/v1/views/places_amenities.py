@@ -50,7 +50,7 @@ def delete_place_amenity(place_id, amenity_id):
     place = storage.get(Place, place_id)
     if not (amenity and
             place and
-            place.id == amenity.place_id):
+            amenity in place.amenities):
         abort(404)
     if os.getenv('HBNB_TYPE_STORAGE') != 'db':
         place.amenity_ids = list(map(lambda y: y.id,
