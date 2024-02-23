@@ -17,10 +17,10 @@ def post_user():
         return {'error': 'Not a JSON'}, 400
     email = data.get('email')
     if not email:
-        return {'error': 'Missing email'}, 400
+        return {'error': 'Missing Email'}, 400
     password = data.get('password')
     if not password:
-        return {'error': 'Missing password'}, 400
+        return {'error': 'Missing Password'}, 400
     new_user = User(**data)
     storage.new(new_user)
     storage.save()
