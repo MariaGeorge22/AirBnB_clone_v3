@@ -27,7 +27,7 @@ def post_place(city_id):
     name = data.get('name')
     if not name:
         return {'error': 'Missing name'}, 400
-    new_place = Place(**data)
+    new_place = Place(**data, city_id=city_id)
     storage.new(new_place)
     storage.save()
     return new_place.to_dict(), 201
