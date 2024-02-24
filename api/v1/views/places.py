@@ -6,6 +6,7 @@ from api.v1.views import app_views
 from models import storage
 from models.city import City
 from models.place import Place
+from models.state import State
 from models.user import User
 
 
@@ -80,3 +81,49 @@ def delete_place(place_id):
     storage.delete(storage.get(Place, place_id))
     storage.save()
     return {}, 200
+
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def places_search():
+    """retrieves all Place objects
+    depending of the JSON in the body of the request"""
+    data = request.get_json()
+    if not data:
+        return {'error': 'Not a JSON'}, 400
+    if data != {} and not all(map(lambda x: len(x) == 0, data.values())):
+        results = []
+        states = data.get('states')
+        cities = data.get('cities')
+        amenities = data.get('amenities')
+        if states:
+            for state in states:
+                state = storage.get(State, state)
+                if state:
+                    for city in state.cities:
+                        city = storage.get(City, city.id)
+                        if city:
+                            results.extend(list(map(lambda x: x.to_dict(),
+                                                    city.places)))
+        if cities:
+            for city in cities:
+                city = storage.get(City, city)
+                if city and city.state_id not in states:
+                    results.extend(list(map(lambda x: x.to_dict(),
+                                            city.places)))
+        if amenities:
+            if not (states or cities):
+                results = list(map(lambda x: x.to_dict(),
+                                   storage.all(Place).values()))
+            for place in results:
+                contains_all = True
+                place_amenities = list(map(lambda x: x.id, place.amenities))
+                for amenity in amenities:
+                    if amenity not in place_amenities:
+                        contains_all = False
+                        break
+                if not contains_all:
+                    results.remove(place)
+        return jsonify(results)
+    else:
+        return jsonify(list(map(lambda x: x.to_dict(),
+                                storage.all(Place).values())))
