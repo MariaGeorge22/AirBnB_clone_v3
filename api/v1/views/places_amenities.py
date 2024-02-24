@@ -2,12 +2,11 @@
 """view for Place objects"""
 
 import os
-from flask import abort, jsonify, request
+from flask import abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.place import Place
 from models.amenity import Amenity
-from models.user import User
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
