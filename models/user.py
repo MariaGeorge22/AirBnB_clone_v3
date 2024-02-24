@@ -25,6 +25,11 @@ class User(BaseModel, Base):
         last_name = ""
 
     if os.getenv("HBNB_TYPE_STORAGE") != "db":
+        @property
+        def password(self):
+            """getter for password"""
+            return self.password
+
         @password.setter
         def password(self, pwd):
             """hashes the password"""
