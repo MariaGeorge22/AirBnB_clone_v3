@@ -102,28 +102,30 @@ def places_search():
                     for city in state.cities:
                         city = storage.get(City, city.id)
                         if city:
-                            results.extend(list(map(lambda x: x.to_dict(),
-                                                    city.places)))
+                            results.extend(city.places)
         if cities:
             for city in cities:
                 city = storage.get(City, city)
                 if city and city.state_id not in states:
-                    results.extend(list(map(lambda x: x.to_dict(),
-                                            city.places)))
+                    results.extend(city.places)
         if amenities:
             if not (states or cities):
-                results = list(map(lambda x: x.to_dict(),
-                                   storage.all(Place).values()))
+                results = list(storage.all(Place).values())
             for place in results:
                 contains_all = True
                 place_amenities = list(map(lambda x: x.id, place.amenities))
                 for amenity in amenities:
-                    if amenity not in place_amenities:
+                    if len(place_amenities) == 0 \
+                            or amenity not in place_amenities:
                         contains_all = False
                         break
                 if not contains_all:
                     results.remove(place)
-        return jsonify(results)
+        mapped_result = list(map(lambda x: x.to_dict(), results))
+        for place in range(len(mapped_result)):
+            mapped_result[place]["amenities"] = list(
+                map(lambda x: x.to_dict(), results[place].amenities))
+        return jsonify(mapped_result)
     else:
         return jsonify(list(map(lambda x: x.to_dict(),
                                 storage.all(Place).values())))
