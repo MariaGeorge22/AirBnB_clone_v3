@@ -87,10 +87,10 @@ def delete_place(place_id):
 def places_search():
     """retrieves all Place objects
     depending of the JSON in the body of the request"""
-    if not request.is_json:
-        return {'error': 'Not a JSON'}, 400
     data = request.get_json()
-    if not data and not all(map(lambda x: len(x) == 0, data.values())):
+    if not data:
+        return {'error': 'Not a JSON'}, 400
+    if data != {} and not all(map(lambda x: len(x) == 0, data.values())):
         results = []
         states = data.get('states')
         cities = data.get('cities')
