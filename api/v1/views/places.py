@@ -127,5 +127,9 @@ def places_search():
                 map(lambda x: x.to_dict(), results[place].amenities))
         return jsonify(mapped_result)
     else:
-        return jsonify(list(map(lambda x: x.to_dict(),
-                                storage.all(Place).values())))
+        results = list(storage.all(Place).values())
+        mapped_result = list(map(lambda x: x.to_dict(), results))
+        for place in range(len(mapped_result)):
+            mapped_result[place]["amenities"] = list(
+                map(lambda x: x.to_dict(), results[place].amenities))
+        return jsonify(mapped_result)
