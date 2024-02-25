@@ -116,16 +116,10 @@ def places_search():
             results = list(filter(lambda x: filter_by_amenity(x, amenities),
                                   results))
         mapped_result = list(map(lambda x: x.to_dict(), results))
-        for place in range(len(mapped_result)):
-            mapped_result[place]["amenities"] = list(
-                map(lambda x: x.to_dict(), results[place].amenities))
         return jsonify(mapped_result)
     else:
         results = list(storage.all(Place).values())
         mapped_result = list(map(lambda x: x.to_dict(), results))
-        for place in range(len(mapped_result)):
-            mapped_result[place]["amenities"] = list(
-                map(lambda x: x.to_dict(), results[place].amenities))
         return jsonify(mapped_result)
 
 
