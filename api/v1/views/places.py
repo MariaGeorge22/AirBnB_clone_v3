@@ -106,7 +106,9 @@ def places_search():
         if cities:
             for city in cities:
                 city = storage.get(City, city)
-                if city and city.state_id not in states:
+                if city and \
+                        not states or\
+                        (states and city.state_id not in states):
                     results.extend(city.places)
         if amenities:
             if not (states or cities):

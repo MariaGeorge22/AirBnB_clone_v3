@@ -17,6 +17,18 @@ class City(BaseModel, Base):
         state_id = ""
         name = ""
 
+        @property
+        def places(self):
+            """getter attribute returns the list of Place instances"""
+            place_list = []
+            from models.place import Place
+            from models import storage
+            all_places = storage.all(Place)
+            for place in all_places.values():
+                if place.city_id == self.id:
+                    place_list.append(place)
+            return place_list
+
     def __init__(self, *args, **kwargs):
         """initializes city"""
         super().__init__(*args, **kwargs)
