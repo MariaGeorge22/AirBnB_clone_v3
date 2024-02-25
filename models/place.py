@@ -74,11 +74,3 @@ class Place(BaseModel, Base):
                 if amenity.id in self.amenity_ids:
                     amenity_list.append(amenity)
             return amenity_list
-
-        @amenities.setter
-        def amenities(self, amenities):
-            """setter attribute that handles append method for adding an Amenity
-            instance to the attribute amenity_ids"""
-            from models.amenity import Amenity
-            if type(amenities) == Amenity:
-                self.amenity_ids.append(amenities.id)
