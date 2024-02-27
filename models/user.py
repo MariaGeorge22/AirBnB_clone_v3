@@ -20,7 +20,7 @@ class User(BaseModel, Base):
         reviews = relationship("Review", backref="user")
     else:
         email = ""
-        password = ""
+        inner_password = ""
         first_name = ""
         last_name = ""
 
@@ -28,15 +28,15 @@ class User(BaseModel, Base):
         @property
         def password(self):
             """getter for password"""
-            return self.password
+            return self.inner_password
 
         @password.setter
         def password(self, pwd):
             """hashes the password"""
             if pwd:
-                self.password = md5(pwd.encode()).hexdigest()
+                self.inner_password = md5(pwd.encode()).hexdigest()
             else:
-                self.password = ""
+                self.inner_password = ""
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
